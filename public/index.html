@@ -41,7 +41,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* z-index map: bg 0 · runes 1 · fog 2 · embers 3 · vignette 4 · flash 6 · content 7 */
+  /* z-index map: bg 0 · runes 1 · fog 2 · embers 3 · vignette 4 · content 7 */
 
   body::before {
     content: ""; position: fixed; inset: 0; z-index: 0;
@@ -85,13 +85,6 @@
     background: radial-gradient(circle at 50% 46%, transparent 28%, rgba(6,3,4,0.88) 100%);
   }
 
-  /* --- Distant lightning: reveals the whole wall for an instant --- */
-  .flash {
-    position: fixed; inset: 0; z-index: 6; pointer-events: none;
-    background: radial-gradient(circle at 50% 32%, rgba(228,220,203,0.12), transparent 72%);
-    opacity: 0; mix-blend-mode: screen; transition: opacity 90ms ease-out;
-  }
-
   /* ============================  CONTENT  ============================ */
   main {
     position: relative; z-index: 7;
@@ -122,12 +115,6 @@
       0 0 24px rgba(178,31,38,0.55),
       0 0 60px rgba(94,13,17,0.55),
       0 2px 2px rgba(0,0,0,0.6);
-    animation: flicker 6s linear infinite;
-  }
-  @keyframes flicker {
-    0%, 19%, 21%, 55%, 57%, 100% { opacity: 1; }
-    20% { opacity: 0.78; } 56% { opacity: 0.86; }
-    71%, 73% { opacity: 0.66; } 72% { opacity: 0.92; }
   }
 
   /* The engraved-plate epithet */
@@ -153,7 +140,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .fog, .title, .flash { animation: none !important; }
+    .fog { animation: none !important; }
   }
 </style>
 </head>
@@ -164,7 +151,6 @@
   <div class="fog two"></div>
   <canvas id="embers"></canvas>
   <div class="vignette"></div>
-  <div class="flash" id="flash"></div>
 
   <main>
     <!-- EDIT: the name -->
@@ -226,21 +212,6 @@
       ctx.shadowBlur = 0; requestAnimationFrame(draw);
     }
     if (COUNT) draw();
-  })();
-
-  /* Distant lightning */
-  (function () {
-    if (reduce) return;
-    const flash = document.getElementById('flash');
-    (function strike() {
-      flash.style.opacity = (Math.random() * 0.4 + 0.4).toFixed(2);
-      setTimeout(() => { flash.style.opacity = 0; }, 110);
-      if (Math.random() > 0.5) {
-        setTimeout(() => { flash.style.opacity = 0.3; }, 220);
-        setTimeout(() => { flash.style.opacity = 0; }, 320);
-      }
-      setTimeout(strike, 9000 + Math.random() * 14000);
-    })();
   })();
 </script>
 </body>
