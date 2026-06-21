@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Baron Fear</title>
+<meta name="description" content="The domain of Baron Fear." />
+
+<!-- Inline crimson crown favicon -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23b21f26' d='M4 11l5 5 7-9 7 9 5-5v14H4z'/%3E%3C/svg%3E" />
+
+<!-- Cinzel = the name (chiseled caps). Noto Sans Cuneiform = the wall of Sumerian. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Noto+Sans+Cuneiform&display=swap" rel="stylesheet" />
+
+<style>
+  /* ============================================================
+     BARON FEAR — name parking page (doom-temple cut).
+     Colors in :root. Name + epithet in the <main> below.
+     ============================================================ */
+  :root {
+    --velvet:     #0c0608;
+    --crypt:      #1a0c0e;
+    --blood:      #b21f26;
+    --blood-deep: #5e0d11;
+    --gold:       #b89154;
+    --gold-dim:   #6e5630;
+    --bone:       #e4dccb;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+
+  body {
+    background: var(--velvet);
+    color: var(--bone);
+    font-family: "Cinzel", Georgia, "Times New Roman", serif;
+    overflow: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* z-index map: bg 0 · runes 1 · fog 2 · embers 3 · vignette 4 · lantern 5 · flash 6 · content 7 */
+
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(60% 50% at 50% 42%, rgba(94,13,17,0.45), transparent 70%),
+      radial-gradient(80% 70% at 50% 120%, var(--crypt), transparent 75%);
+  }
+
+  /* --- The Sumerian wall: carved script, hellfire faint in the grooves --- */
+  .runes {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none; user-select: none;
+    overflow: hidden;
+    font-family: "Noto Sans Cuneiform", serif;
+    font-size: clamp(15px, 1.75vw, 23px);
+    line-height: 1.7;
+    letter-spacing: 0.16em;
+    white-space: pre;
+    color: rgba(178,31,38,0.11);
+    text-shadow: 0 0 14px rgba(178,31,38,0.22);
+  }
+
+  /* --- Drifting fog --- */
+  .fog {
+    position: fixed; inset: -20%; z-index: 2; pointer-events: none;
+    background: radial-gradient(40% 40% at 30% 50%, rgba(120,40,46,0.10), transparent 60%),
+                radial-gradient(45% 45% at 70% 40%, rgba(40,18,22,0.18), transparent 65%);
+    filter: blur(20px); will-change: transform;
+  }
+  .fog.one { animation: drift1 38s ease-in-out infinite alternate; }
+  .fog.two { animation: drift2 52s ease-in-out infinite alternate;
+             background: radial-gradient(50% 50% at 60% 60%, rgba(94,13,17,0.14), transparent 60%); }
+  @keyframes drift1 { from { transform: translate3d(-3%, 2%, 0); } to { transform: translate3d(4%, -3%, 0); } }
+  @keyframes drift2 { from { transform: translate3d(3%, -2%, 0) scale(1.1); } to { transform: translate3d(-4%, 3%, 0) scale(1); } }
+
+  /* --- Rising embers --- */
+  #embers { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
+
+  /* --- Vignette --- */
+  .vignette {
+    position: fixed; inset: 0; z-index: 4; pointer-events: none;
+    background: radial-gradient(circle at 50% 46%, transparent 28%, rgba(6,3,4,0.88) 100%);
+  }
+
+  /* --- Lantern: follows your pointer, sets the runes alight as it passes --- */
+  .lantern {
+    position: fixed; top: 0; left: 0; z-index: 5;
+    width: 780px; height: 780px; margin: -390px 0 0 -390px;
+    pointer-events: none; mix-blend-mode: screen;
+    background: radial-gradient(circle,
+                  rgba(224,150,84,0.34) 0%,
+                  rgba(190,40,40,0.18) 28%,
+                  rgba(120,40,46,0.07) 50%,
+                  transparent 68%);
+    transform: translate3d(50vw, 46vh, 0); will-change: transform;
+  }
+
+  /* --- Distant lightning: reveals the whole wall for an instant --- */
+  .flash {
+    position: fixed; inset: 0; z-index: 6; pointer-events: none;
+    background: radial-gradient(circle at 50% 32%, rgba(228,220,203,0.12), transparent 72%);
+    opacity: 0; mix-blend-mode: screen; transition: opacity 90ms ease-out;
+  }
+
+  /* ============================  CONTENT  ============================ */
+  main {
+    position: relative; z-index: 7;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 2rem 1.5rem;
+  }
+  /* dark halo so the name stays crisp over the carved wall */
+  main::before {
+    content: ""; position: absolute; z-index: -1;
+    left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: min(125vw, 1150px); height: 62vh;
+    background: radial-gradient(ellipse at center,
+                  rgba(6,3,4,0.80) 0%, rgba(6,3,4,0.38) 45%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* EDIT: the name */
+  .title {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: clamp(3rem, 14vw, 10rem);
+    line-height: 0.95;
+    color: var(--blood);
+    text-shadow:
+      0 0 24px rgba(178,31,38,0.55),
+      0 0 60px rgba(94,13,17,0.55),
+      0 2px 2px rgba(0,0,0,0.6);
+    animation: flicker 6s linear infinite;
+  }
+  @keyframes flicker {
+    0%, 19%, 21%, 55%, 57%, 100% { opacity: 1; }
+    20% { opacity: 0.78; } 56% { opacity: 0.86; }
+    71%, 73% { opacity: 0.66; } 72% { opacity: 0.92; }
+  }
+
+  /* The engraved-plate epithet */
+  .plate {
+    display: flex; align-items: center; justify-content: center;
+    gap: 1rem; margin-top: 1.8rem;
+  }
+  .plate .rule {
+    height: 1px; width: clamp(24px, 8vw, 56px);
+    background: linear-gradient(90deg, transparent, var(--gold-dim));
+  }
+  .plate .rule.right { background: linear-gradient(90deg, var(--gold-dim), transparent); }
+
+  /* EDIT: the identity line — rendered in cuneiform */
+  .epithet {
+    font-family: "Noto Sans Cuneiform", serif;
+    font-size: clamp(1rem, 3vw, 1.6rem);
+    letter-spacing: 0.16em;
+    color: var(--gold);
+    text-shadow: 0 0 16px rgba(184,145,84,0.40);
+    padding-left: 0.16em;
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fog, .title, .flash { animation: none !important; }
+    .lantern { display: none; }
+  }
+</style>
+</head>
+
+<body>
+  <div class="runes" id="runes" aria-hidden="true"></div>
+  <div class="fog one"></div>
+  <div class="fog two"></div>
+  <canvas id="embers"></canvas>
+  <div class="vignette"></div>
+  <div class="lantern" id="lantern"></div>
+  <div class="flash" id="flash"></div>
+
+  <main>
+    <!-- EDIT: the name -->
+    <h1 class="title">Baron&nbsp;Fear</h1>
+
+    <!-- EDIT: the epithet in cuneiform. Each &#x....; is one sign — swap codepoints
+         in the range 12000–122FF to change the inscription. Delete the .plate block for name only. -->
+    <div class="plate">
+      <span class="rule left"></span>
+      <span class="epithet" aria-label="Harbinger of Dread">&#x12022;&#x1201D;&#x12100;&#x12157;&#x1208A;&#x122BB;&#x12046;&#x121A0;</span>
+      <span class="rule right"></span>
+    </div>
+  </main>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Fill the wall with cuneiform (assigned Sumero-Akkadian range) */
+  (function () {
+    const el = document.getElementById('runes');
+    const rune = () => String.fromCodePoint(0x12000 + Math.floor(Math.random() * 0x300));
+    const COLS = 130, ROWS = 80;
+    const lines = [];
+    for (let r = 0; r < ROWS; r++) {
+      let line = '';
+      for (let c = 0; c < COLS; c++) {
+        line += rune();
+        if (Math.random() < 0.16) line += ' ';   // word-like clusters
+      }
+      lines.push(line);
+    }
+    el.textContent = lines.join('\n');
+  })();
+
+  /* Lantern: smooth follow */
+  if (!reduce) {
+    const lantern = document.getElementById('lantern');
+    let tx = innerWidth / 2, ty = innerHeight * 0.46, cx = tx, cy = ty;
+    const move = (x, y) => { tx = x; ty = y; };
+    addEventListener('pointermove', e => move(e.clientX, e.clientY), { passive: true });
+    addEventListener('touchmove', e => { if (e.touches[0]) move(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+    (function follow() {
+      cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
+      lantern.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      requestAnimationFrame(follow);
+    })();
+  }
+
+  /* Embers */
+  (function () {
+    const canvas = document.getElementById('embers');
+    const ctx = canvas.getContext('2d');
+    let W, H, embers = [];
+    function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+    resize(); addEventListener('resize', resize);
+    function spark() {
+      return { x: Math.random() * W, y: H + Math.random() * 40, r: Math.random() * 1.6 + 0.4,
+               vy: Math.random() * 0.5 + 0.2, sway: Math.random() * 0.6 + 0.2,
+               phase: Math.random() * Math.PI * 2, life: Math.random() * 0.5 + 0.5 };
+    }
+    const COUNT = reduce ? 0 : 55;
+    for (let i = 0; i < COUNT; i++) { const s = spark(); s.y = Math.random() * H; embers.push(s); }
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      for (const e of embers) {
+        e.y -= e.vy; e.phase += 0.01; e.x += Math.sin(e.phase) * e.sway * 0.4;
+        const fade = Math.max(0, Math.min(1, e.y / H));
+        ctx.beginPath(); ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(224,150,84,${0.5 * fade * e.life})`;
+        ctx.shadowBlur = 8; ctx.shadowColor = 'rgba(178,31,38,0.6)'; ctx.fill();
+        if (e.y < -10) Object.assign(e, spark());
+      }
+      ctx.shadowBlur = 0; requestAnimationFrame(draw);
+    }
+    if (COUNT) draw();
+  })();
+
+  /* Distant lightning */
+  (function () {
+    if (reduce) return;
+    const flash = document.getElementById('flash');
+    (function strike() {
+      flash.style.opacity = (Math.random() * 0.4 + 0.4).toFixed(2);
+      setTimeout(() => { flash.style.opacity = 0; }, 110);
+      if (Math.random() > 0.5) {
+        setTimeout(() => { flash.style.opacity = 0.3; }, 220);
+        setTimeout(() => { flash.style.opacity = 0; }, 320);
+      }
+      setTimeout(strike, 9000 + Math.random() * 14000);
+    })();
+  })();
+</script>
+</body>
+</html>
