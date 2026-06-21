@@ -1,0 +1,3 @@
+# Always revalidate the HTML so a new deploy is never masked by a cached copy.
+/*
+  Cache-Control: no-cache
