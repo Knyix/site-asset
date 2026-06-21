@@ -41,7 +41,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* z-index map: bg 0 · runes 1 · fog 2 · embers 3 · vignette 4 · lantern 5 · flash 6 · content 7 */
+  /* z-index map: bg 0 · runes 1 · fog 2 · embers 3 · vignette 4 · flash 6 · content 7 */
 
   body::before {
     content: ""; position: fixed; inset: 0; z-index: 0;
@@ -83,19 +83,6 @@
   .vignette {
     position: fixed; inset: 0; z-index: 4; pointer-events: none;
     background: radial-gradient(circle at 50% 46%, transparent 28%, rgba(6,3,4,0.88) 100%);
-  }
-
-  /* --- Lantern: follows your pointer, sets the runes alight as it passes --- */
-  .lantern {
-    position: fixed; top: 0; left: 0; z-index: 5;
-    width: 780px; height: 780px; margin: -390px 0 0 -390px;
-    pointer-events: none; mix-blend-mode: screen;
-    background: radial-gradient(circle,
-                  rgba(224,150,84,0.34) 0%,
-                  rgba(190,40,40,0.18) 28%,
-                  rgba(120,40,46,0.07) 50%,
-                  transparent 68%);
-    transform: translate3d(50vw, 46vh, 0); will-change: transform;
   }
 
   /* --- Distant lightning: reveals the whole wall for an instant --- */
@@ -167,7 +154,6 @@
 
   @media (prefers-reduced-motion: reduce) {
     .fog, .title, .flash { animation: none !important; }
-    .lantern { display: none; }
   }
 </style>
 </head>
@@ -178,7 +164,6 @@
   <div class="fog two"></div>
   <canvas id="embers"></canvas>
   <div class="vignette"></div>
-  <div class="lantern" id="lantern"></div>
   <div class="flash" id="flash"></div>
 
   <main>
@@ -213,20 +198,6 @@
     }
     el.textContent = lines.join('\n');
   })();
-
-  /* Lantern: smooth follow */
-  if (!reduce) {
-    const lantern = document.getElementById('lantern');
-    let tx = innerWidth / 2, ty = innerHeight * 0.46, cx = tx, cy = ty;
-    const move = (x, y) => { tx = x; ty = y; };
-    addEventListener('pointermove', e => move(e.clientX, e.clientY), { passive: true });
-    addEventListener('touchmove', e => { if (e.touches[0]) move(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-    (function follow() {
-      cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
-      lantern.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-      requestAnimationFrame(follow);
-    })();
-  }
 
   /* Embers */
   (function () {
