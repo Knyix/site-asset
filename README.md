@@ -1,17 +1,18 @@
 # baronfear
 
-Static site hosted on [Cloudflare Pages](https://developers.cloudflare.com/pages/)
-and deployed with [Wrangler](https://developers.cloudflare.com/workers/wrangler/).
+Static site hosted on [Cloudflare Workers](https://developers.cloudflare.com/workers/)
+using [Static Assets](https://developers.cloudflare.com/workers/static-assets/),
+deployed with [Wrangler](https://developers.cloudflare.com/workers/wrangler/).
 
-The site is a single static page served from `public/` (the page lives at
-`public/index.html`, so it loads at the site root `/`).
+It's an assets-only Worker (no server code): a single static page served from
+`public/` (the page lives at `public/index.html`, so it loads at the site root `/`).
 
 ## Project layout
 
 ```
-public/          # deployed static assets (the site itself)
+public/          # static assets served by the Worker (the site itself)
   index.html
-wrangler.toml    # Cloudflare Pages config (project name + output dir)
+wrangler.toml    # Worker config (name + [assets] directory)
 package.json     # wrangler dev dependency + scripts
 ```
 
@@ -19,7 +20,7 @@ package.json     # wrangler dev dependency + scripts
 
 ```sh
 npm install
-npm run dev        # runs `wrangler pages dev public` → http://localhost:8788
+npm run dev        # runs `wrangler dev` → http://localhost:8787
 ```
 
 ## Deploy
@@ -35,10 +36,13 @@ export CLOUDFLARE_API_TOKEN=...
 Then deploy:
 
 ```sh
-npm run deploy     # runs `wrangler pages deploy`
+npm run deploy     # runs `wrangler deploy`
 ```
 
-On the first deploy Wrangler creates a Pages project named **`baronfear`**
-(from `name` in `wrangler.toml`) and returns a `https://baronfear.pages.dev` URL.
-The project name and output directory (`public`) are read from `wrangler.toml`,
-so no extra flags are needed.
+Wrangler creates a Worker named **`baronfear`** (from `name` in `wrangler.toml`),
+uploads the `public/` directory, and returns a `https://baronfear.<your-subdomain>.workers.dev`
+URL. The name and assets directory are read from `wrangler.toml`, so no extra flags
+are needed.
+
+> If you deploy via Cloudflare's Git integration (Workers Builds), set the deploy
+> command to `npx wrangler deploy` — it picks up everything from `wrangler.toml`.

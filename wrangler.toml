@@ -1,3 +1,7 @@
 name = "baronfear"
 compatibility_date = "2026-06-21"
-pages_build_output_dir = "public"
+
+# Assets-only Worker: serves the static files in ./public with no Worker script.
+# Deploy with `wrangler deploy` (not `wrangler pages deploy`).
+[assets]
+directory = "./public"
