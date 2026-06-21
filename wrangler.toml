@@ -1,4 +1,4 @@
-name = "baronfear"
+name = "site-asset"
 compatibility_date = "2026-06-21"
 
 # Assets-only Worker: serves the static files in ./public with no Worker script.
