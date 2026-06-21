@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Baron Fear</title>
+<meta name="description" content="The domain of Baron Fear." />
+
+<!-- Inline crimson crown favicon -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23b21f26' d='M4 11l5 5 7-9 7 9 5-5v14H4z'/%3E%3C/svg%3E" />
+
+<!-- Cinzel = the name (chiseled caps). Noto Sans Cuneiform = the wall of Sumerian. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Noto+Sans+Cuneiform&display=swap" rel="stylesheet" />
+
+<style>
+  /* ============================================================
+     BARON FEAR — name parking page (doom-temple cut).
+     Colors in :root. Name + epithet in the <main> below.
+     ============================================================ */
+  :root {
+    --velvet:     #0c0608;
+    --crypt:      #1a0c0e;
+    --blood:      #b21f26;
+    --blood-deep: #5e0d11;
+    --gold:       #b89154;
+    --gold-dim:   #6e5630;
+    --bone:       #e4dccb;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+
+  body {
+    background: var(--velvet);
+    color: var(--bone);
+    font-family: "Cinzel", Georgia, "Times New Roman", serif;
+    overflow: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* z-index map: bg 0 · runes 1 · fog 2 · embers 3 · vignette 4 · content 7 */
+
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(60% 50% at 50% 42%, rgba(94,13,17,0.45), transparent 70%),
+      radial-gradient(80% 70% at 50% 120%, var(--crypt), transparent 75%);
+  }
+
+  /* --- The Sumerian wall: carved script, hellfire faint in the grooves --- */
+  .runes {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none; user-select: none;
+    overflow: hidden;
+    font-family: "Noto Sans Cuneiform", serif;
+    font-size: clamp(15px, 1.75vw, 23px);
+    line-height: 1.7;
+    letter-spacing: 0.16em;
+    white-space: pre;
+    color: rgba(178,31,38,0.11);
+    text-shadow: 0 0 14px rgba(178,31,38,0.22);
+  }
+
+  /* --- Drifting fog --- */
+  .fog {
+    position: fixed; inset: -20%; z-index: 2; pointer-events: none;
+    background: radial-gradient(40% 40% at 30% 50%, rgba(120,40,46,0.10), transparent 60%),
+                radial-gradient(45% 45% at 70% 40%, rgba(40,18,22,0.18), transparent 65%);
+    filter: blur(20px); will-change: transform;
+  }
+  .fog.one { animation: drift1 38s ease-in-out infinite alternate; }
+  .fog.two { animation: drift2 52s ease-in-out infinite alternate;
+             background: radial-gradient(50% 50% at 60% 60%, rgba(94,13,17,0.14), transparent 60%); }
+  @keyframes drift1 { from { transform: translate3d(-3%, 2%, 0); } to { transform: translate3d(4%, -3%, 0); } }
+  @keyframes drift2 { from { transform: translate3d(3%, -2%, 0) scale(1.1); } to { transform: translate3d(-4%, 3%, 0) scale(1); } }
+
+  /* --- Rising embers --- */
+  #embers { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
+
+  /* --- Vignette --- */
+  .vignette {
+    position: fixed; inset: 0; z-index: 4; pointer-events: none;
+    background: radial-gradient(circle at 50% 46%, transparent 28%, rgba(6,3,4,0.88) 100%);
+  }
+
+  /* ============================  CONTENT  ============================ */
+  main {
+    position: relative; z-index: 7;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 2rem 1.5rem;
+  }
+  /* dark halo so the name stays crisp over the carved wall */
+  main::before {
+    content: ""; position: absolute; z-index: -1;
+    left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: min(125vw, 1150px); height: 62vh;
+    background: radial-gradient(ellipse at center,
+                  rgba(6,3,4,0.80) 0%, rgba(6,3,4,0.38) 45%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* EDIT: the name */
+  .title {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: clamp(3rem, 14vw, 10rem);
+    line-height: 0.95;
+    color: var(--blood);
+    text-shadow:
+      0 0 24px rgba(178,31,38,0.55),
+      0 0 60px rgba(94,13,17,0.55),
+      0 2px 2px rgba(0,0,0,0.6);
+  }
+
+  /* The engraved-plate epithet */
+  .plate {
+    display: flex; align-items: center; justify-content: center;
+    gap: 1rem; margin-top: 1.8rem;
+  }
+  .plate .rule {
+    height: 1px; width: clamp(24px, 8vw, 56px);
+    background: linear-gradient(90deg, transparent, var(--gold-dim));
+  }
+  .plate .rule.right { background: linear-gradient(90deg, var(--gold-dim), transparent); }
+
+  /* EDIT: the identity line — rendered in cuneiform */
+  .epithet {
+    font-family: "Noto Sans Cuneiform", serif;
+    font-size: clamp(1rem, 3vw, 1.6rem);
+    letter-spacing: 0.16em;
+    color: var(--gold);
+    text-shadow: 0 0 16px rgba(184,145,84,0.40);
+    padding-left: 0.16em;
+    white-space: nowrap;
+  }
+
+  /* ---- The countdown: Babylonian (base-60) numerals; hover/tap to decode ---- */
+  .countdown {
+    margin-top: 2.3rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.85rem;
+    cursor: help;
+  }
+  .clocks {
+    display: flex; align-items: flex-end; justify-content: center;
+    gap: clamp(0.6rem, 3vw, 1.5rem);
+  }
+  .unit {
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    min-width: clamp(1.4rem, 6vw, 2.6rem);
+  }
+  .cuneo {
+    font-family: "Noto Sans Cuneiform", serif;
+    font-size: clamp(1.6rem, 5.5vw, 3rem); line-height: 1;
+    color: var(--gold); text-shadow: 0 0 18px rgba(184,145,84,0.45);
+    min-height: 1em;
+  }
+  .unit .tick {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+  /* readable decode line — hidden until hover / focus / tap */
+  .decoded {
+    font-family: "Cinzel", Georgia, serif;
+    font-size: clamp(0.68rem, 1.9vw, 0.92rem);
+    letter-spacing: 0.26em; text-transform: uppercase;
+    color: var(--gold-dim); padding-left: 0.26em;
+    opacity: 0; transition: opacity 320ms ease; min-height: 1.1em;
+  }
+  .countdown:hover .decoded,
+  .countdown:focus-within .decoded,
+  .countdown.reveal .decoded { opacity: 1; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fog { animation: none !important; }
+    .decoded { transition: none; }
+  }
+</style>
+</head>
+
+<body>
+  <div class="runes" id="runes" aria-hidden="true"></div>
+  <div class="fog one"></div>
+  <div class="fog two"></div>
+  <canvas id="embers"></canvas>
+  <div class="vignette"></div>
+
+  <main>
+    <!-- EDIT: the name -->
+    <h1 class="title">Baron&nbsp;Fear</h1>
+
+    <!-- EDIT: the epithet in cuneiform. Each &#x....; is one sign — swap codepoints
+         in the range 12000–122FF to change the inscription. Delete the .plate block for name only. -->
+    <div class="plate">
+      <span class="rule left"></span>
+      <span class="epithet" aria-label="Harbinger of Dread">&#x12022;&#x1201D;&#x12100;&#x12157;&#x1208A;&#x122BB;&#x12046;&#x121A0;</span>
+      <span class="rule right"></span>
+    </div>
+
+    <!-- Countdown in Babylonian base-60 numerals. Hover / tap to decode. -->
+    <div class="countdown" id="countdown" tabindex="0" role="timer" aria-label="Countdown" title="Hover to decode">
+      <div class="clocks" aria-hidden="true">
+        <span class="unit"><span class="cuneo" id="cd-d"></span><span class="tick"></span></span>
+        <span class="unit"><span class="cuneo" id="cd-h"></span><span class="tick"></span></span>
+        <span class="unit"><span class="cuneo" id="cd-m"></span><span class="tick"></span></span>
+        <span class="unit"><span class="cuneo" id="cd-s"></span><span class="tick"></span></span>
+      </div>
+      <div class="decoded" id="cd-decoded"></div>
+      <span class="sr-only" id="cd-sr" aria-live="polite"></span>
+    </div>
+  </main>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Fill the wall with cuneiform (assigned Sumero-Akkadian range) */
+  (function () {
+    const el = document.getElementById('runes');
+    const rune = () => String.fromCodePoint(0x12000 + Math.floor(Math.random() * 0x300));
+    const COLS = 130, ROWS = 80;
+    const lines = [];
+    for (let r = 0; r < ROWS; r++) {
+      let line = '';
+      for (let c = 0; c < COLS; c++) {
+        line += rune();
+        if (Math.random() < 0.16) line += ' ';   // word-like clusters
+      }
+      lines.push(line);
+    }
+    el.textContent = lines.join('\n');
+  })();
+
+  /* Embers */
+  (function () {
+    const canvas = document.getElementById('embers');
+    const ctx = canvas.getContext('2d');
+    let W, H, embers = [];
+    function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+    resize(); addEventListener('resize', resize);
+    function spark() {
+      return { x: Math.random() * W, y: H + Math.random() * 40, r: Math.random() * 1.6 + 0.4,
+               vy: Math.random() * 0.5 + 0.2, sway: Math.random() * 0.6 + 0.2,
+               phase: Math.random() * Math.PI * 2, life: Math.random() * 0.5 + 0.5 };
+    }
+    const COUNT = reduce ? 0 : 55;
+    for (let i = 0; i < COUNT; i++) { const s = spark(); s.y = Math.random() * H; embers.push(s); }
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      for (const e of embers) {
+        e.y -= e.vy; e.phase += 0.01; e.x += Math.sin(e.phase) * e.sway * 0.4;
+        const fade = Math.max(0, Math.min(1, e.y / H));
+        ctx.beginPath(); ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(224,150,84,${0.5 * fade * e.life})`;
+        ctx.shadowBlur = 8; ctx.shadowColor = 'rgba(178,31,38,0.6)'; ctx.fill();
+        if (e.y < -10) Object.assign(e, spark());
+      }
+      ctx.shadowBlur = 0; requestAnimationFrame(draw);
+    }
+    if (COUNT) draw();
+  })();
+
+  /* ============================================================
+     Countdown — Babylonian (base-60) cuneiform numerals.
+     Hover / tap / focus to decode. Base-60 is Babylonian, which is
+     exactly why an hour has 60 minutes and a minute 60 seconds — so
+     hours, minutes, and seconds are each a single sexagesimal digit.
+     ============================================================ */
+  (function () {
+    // >>> EDIT THIS: when the countdown ends (ISO 8601).
+    //     'Z' = UTC; or use an offset like -04:00 for a specific timezone.
+    const TARGET = new Date('2028-04-17T16:23:00-04:00');   // 666 days from 2026-06-21 4:23 PM EDT
+
+    const UNIT = '\u{12079}';  // 𒁹 vertical wedge = 1
+    const TEN  = '\u{1230B}';  // 𒌋 corner wedge   = 10
+    // Babylonians had no zero glyph — an empty place (over its tick) reads as 0.
+
+    const digit = (v) => v === 0 ? '' : TEN.repeat(Math.floor(v / 10)) + UNIT.repeat(v % 10);
+    function babylon(n) {                       // base-60 positional for n >= 60 (days)
+      if (n < 60) return digit(n);
+      const places = [];
+      while (n > 0) { places.unshift(digit(n % 60)); n = Math.floor(n / 60); }
+      return places.join(' ');             // thin space between places
+    }
+
+    const $ = (id) => document.getElementById(id);
+    const elD = $('cd-d'), elH = $('cd-h'), elM = $('cd-m'), elS = $('cd-s');
+    const elDec = $('cd-decoded'), elSr = $('cd-sr'), root = $('countdown');
+    const pad = (n) => String(n).padStart(2, '0');
+    let timer = null, ended = false;
+
+    function onCountdownEnd() {
+      // ========================================================
+      // TODO: THE REVEAL lands here (Summoning / Unsealing / …).
+      // For now the numerals simply rest at zero.
+      // ========================================================
+      root.classList.add('ended');
+    }
+
+    function tick() {
+      const ms = TARGET.getTime() - Date.now();
+      const total = Math.floor(Math.max(0, ms) / 1000);
+      const d = Math.floor(total / 86400);
+      const h = Math.floor((total % 86400) / 3600);
+      const m = Math.floor((total % 3600) / 60);
+      const s = total % 60;
+
+      elD.textContent = babylon(d);
+      elH.textContent = digit(h);
+      elM.textContent = digit(m);
+      elS.textContent = digit(s);
+
+      const readable = d + 'd ' + pad(h) + 'h ' + pad(m) + 'm ' + pad(s) + 's';
+      elDec.textContent = readable;
+      elSr.textContent = readable + ' remaining';
+
+      if (ms <= 0 && !ended) { ended = true; clearInterval(timer); onCountdownEnd(); }
+    }
+
+    tick();
+    timer = setInterval(tick, 1000);
+    // Touch devices: tap toggles the decoded line.
+    root.addEventListener('click', () => root.classList.toggle('reveal'));
+  })();
+</script>
+</body>
+</html>

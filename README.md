@@ -10,16 +10,33 @@ It's an assets-only Worker (no server code): a single static page served from
 ## Project layout
 
 ```
-public/          # static assets served by the Worker (the site itself)
+src/             # readable master — EDIT HERE
   index.html
+public/           # build output served by the Worker — GENERATED, do not hand-edit
+  index.html      # comment-stripped + obfuscated build of src/index.html
+  _headers
+build.mjs        # build: strips comments, obfuscates inline JS, minifies
 wrangler.toml    # Worker config (name + [assets] directory)
-package.json     # wrangler dev dependency + scripts
+package.json     # scripts + dev dependencies
 ```
+
+## The build
+
+`src/index.html` is the readable source. `npm run build` runs `build.mjs`, which
+strips every comment (HTML/CSS/JS), obfuscates the inline JavaScript
+(`javascript-obfuscator`) and minifies the document (`html-minifier-terser`),
+writing the opaque result to `public/index.html`. The served page intentionally
+reveals nothing about the countdown logic.
+
+> **Always run `npm run build` after editing `src/index.html` and commit the
+> regenerated `public/index.html`** — the Worker serves `public/` verbatim, and
+> `npm run deploy` rebuilds first (`predeploy`).
 
 ## Local preview
 
 ```sh
 npm install
+npm run build      # regenerate public/index.html from src/
 npm run dev        # runs `wrangler dev` → http://localhost:8787
 ```
 
